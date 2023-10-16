@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { TextField, Button, Callout } from "@radix-ui/themes";
+import { TextField, Button, Callout, Text } from "@radix-ui/themes";
 import SimpleMdeReact from "react-simplemde-editor";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import issueSchema, { IssueSchema } from "@/validations/issue";
 import "easymde/dist/easymde.min.css";
 import axios from "axios";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 
 const NewIssuePage = () => {
   const [error, setError] = useState("");
@@ -41,21 +42,18 @@ const NewIssuePage = () => {
       )}
       <h1>New Issue</h1>
       <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
-        <TextField.Root {...register("title")}>
-          <TextField.Input placeholder="Title" />
+        <TextField.Root>
+          <TextField.Input {...register("title")} placeholder="Title" />
         </TextField.Root>
+        <ErrorMessage>{errors.title?.message}</ErrorMessage>
         <Controller
           name="description"
           control={control}
-          render={({ field: { onBlur, onChange, value } }) => (
-            <SimpleMdeReact
-              onBlur={onBlur}
-              onChange={onChange}
-              value={value}
-              placeholder="Description"
-            />
+          render={({ field }) => (
+            <SimpleMdeReact {...field} placeholder="Description" />
           )}
         />
+        <ErrorMessage>{errors.description?.message}</ErrorMessage>
         <Button>Submit Issue</Button>
       </form>
     </main>
