@@ -6,3 +6,4 @@ const issueSchema = z.object({
 });
 
 export default issueSchema;
+export type IssueSchema = z.infer<typeof issueSchema>;
