@@ -10,9 +10,11 @@ import issueSchema, { IssueSchema } from "@/validations/issue";
 import "easymde/dist/easymde.min.css";
 import axios from "axios";
 import ErrorMessage from "@/components/ui/ErrorMessage";
+import Spinner from "@/components/ui/Spinner";
 
 const NewIssuePage = () => {
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
   const {
@@ -25,11 +27,13 @@ const NewIssuePage = () => {
   });
 
   const onSubmit = async (data: IssueSchema) => {
+    setIsSubmitting(true);
     try {
       const response = await axios.post("/api/issues", data);
       router.push(`/issues`);
     } catch (error) {
       setError("An unexpected error occurred.");
+      setIsSubmitting(false);
     }
   };
 
@@ -54,7 +58,10 @@ const NewIssuePage = () => {
           )}
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
-        <Button>Submit Issue</Button>
+        <Button disabled={isSubmitting}>
+          Submit Issue
+          {isSubmitting && <Spinner />}
+        </Button>
       </form>
     </main>
   );
