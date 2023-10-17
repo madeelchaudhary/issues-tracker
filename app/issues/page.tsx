@@ -3,6 +3,7 @@ import { Table, Text } from "@radix-ui/themes";
 
 import IssuesContainer from "./IssuesContainer";
 import IssueStatusBadge from "@/components/ui/IssueStatusBadge";
+import Link from "next/link";
 
 const IssuesPage = async () => {
   const issues = await prisma.issue.findMany({
@@ -32,7 +33,7 @@ const IssuesPage = async () => {
           {issues.map((issue) => (
             <Table.Row key={issue.id}>
               <Table.Cell>
-                {issue.title}
+                <Link href={`/issues/${issue.id}`}>{issue.title}</Link>
                 <Text as="p" className="md:hidden">
                   <IssueStatusBadge status={issue.status} />
                 </Text>
