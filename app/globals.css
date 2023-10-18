@@ -15,3 +15,9 @@
 body {
   color: rgb(var(--foreground-rgb));
 }
+
+@layer components {
+  .markdown h2 {
+    @apply mt-[1.25em];
+  }
+}
