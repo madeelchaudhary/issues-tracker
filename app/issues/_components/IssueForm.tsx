@@ -13,7 +13,7 @@ const SimpleMdeReact = dynamic(() => import("react-simplemde-editor"), {
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import Spinner from "@/components/ui/Spinner";
 import issueSchema, { IssueSchema } from "@/validations/issue";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import "easymde/dist/easymde.min.css";
 import { Issue } from "@prisma/client";
 
@@ -26,7 +26,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
     register,
     handleSubmit,
     control,
-    formState: { errors, defaultValues },
+    formState: { errors },
   } = useForm<IssueSchema>({
     resolver: zodResolver(issueSchema),
     defaultValues: {
@@ -38,10 +38,14 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
   const onSubmit = async (data: IssueSchema) => {
     setIsSubmitting(true);
     try {
-      const response = await axios.post("/api/issues", data);
+      let response: AxiosResponse;
+      if (issue) response = await axios.patch(`/api/issues/${issue.id}`, data);
+      else response = await axios.post("/api/issues", data);
       router.push(`/issues`);
-    } catch (error) {
-      setError("An unexpected error occurred.");
+    } catch (error: any) {
+      let err = "An unexpected error occurred.";
+      if (error.response.data) err = error.response.data.error;
+      setError(err);
       setIsSubmitting(false);
     }
   };
@@ -68,7 +72,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
         <Button disabled={isSubmitting}>
-          Submit Issue
+          {issue ? "Update Issue" : "Create Issue"}
           {isSubmitting && <Spinner />}
         </Button>
       </form>

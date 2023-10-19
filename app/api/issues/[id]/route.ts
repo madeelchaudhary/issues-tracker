@@ -23,7 +23,6 @@ export const PATCH = async (req: NextRequest, { params: { id } }: Props) => {
     }
 
     const data = validation.data;
-    console.log(data);
     const issue = await prisma.issue.findUnique({
       where: {
         id,
