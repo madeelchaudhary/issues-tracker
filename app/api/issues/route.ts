@@ -10,7 +10,9 @@ export const POST = async (req: NextRequest) => {
 
     if (!validation.success)
       return NextResponse.json(
-        { errors: validation.error.errors },
+        {
+          error: validation.error.errors[0].message,
+        },
         { status: 400 }
       );
 
@@ -22,5 +24,12 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json(newIssue, {
       status: 201,
     });
-  } catch (error) {}
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error: "An unexpected error occurred",
+      },
+      { status: 500 }
+    );
+  }
 };
