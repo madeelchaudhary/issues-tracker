@@ -3,8 +3,6 @@ import Skeleton from "react-loading-skeleton";
 
 import IssuesContainer from "./IssuesContainer";
 
-import "react-loading-skeleton/dist/skeleton.css";
-
 const loading = () => {
   const issues = [1, 2, 3, 4, 5];
 
