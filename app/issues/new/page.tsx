@@ -1,16 +1,20 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { TextField, Button, Callout, Text } from "@radix-ui/themes";
-import SimpleMdeReact from "react-simplemde-editor";
-import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button, Callout, TextField } from "@radix-ui/themes";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import dynamic from "next/dynamic";
 
-import issueSchema, { IssueSchema } from "@/validations/issue";
-import "easymde/dist/easymde.min.css";
-import axios from "axios";
+const SimpleMdeReact = dynamic(() => import("react-simplemde-editor"), {
+  ssr: false,
+});
+
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import Spinner from "@/components/ui/Spinner";
+import issueSchema, { IssueSchema } from "@/validations/issue";
+import axios from "axios";
+import "easymde/dist/easymde.min.css";
 
 const NewIssuePage = () => {
   const [error, setError] = useState("");
