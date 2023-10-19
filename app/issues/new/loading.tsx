@@ -1,14 +1,7 @@
-import { Box } from "@radix-ui/themes";
-import Skeleton from "react-loading-skeleton";
+import IssueFormLoading from "../_components/IssueFormLoading";
 
-const loading = () => {
-  return (
-    <Box className="max-w-xl p-5">
-      <Skeleton width={200} height={30} />
-      <Skeleton height="20rem" />
-      <Skeleton width={200} height={30} />
-    </Box>
-  );
+const NewIssueLoading = () => {
+  return <IssueFormLoading />;
 };
 
-export default loading;
+export default NewIssueLoading;
