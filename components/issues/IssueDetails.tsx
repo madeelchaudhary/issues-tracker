@@ -13,7 +13,7 @@ const IssueDetails = ({ issue }: { issue: Issue }) => {
         <Text as="p">{issue.created_at.toDateString()}</Text>
       </Flex>
       <Card asChild>
-        <article className="prose mt-5 markdown">
+        <article className="prose max-w-full mt-5 markdown">
           <ReactMarkdown>{issue.description}</ReactMarkdown>
         </article>
       </Card>
