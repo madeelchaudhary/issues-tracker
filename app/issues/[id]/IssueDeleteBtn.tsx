@@ -3,8 +3,10 @@ import { AlertDialog, Button, Flex } from "@radix-ui/themes";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import ErrorDialog from "../_components/ErrorDialog";
+import { GoTrash } from "react-icons/go";
 
+import ErrorDialog from "../_components/ErrorDialog";
+import Spinner from "@/components/ui/Spinner";
 interface Props {
   issueId: string;
 }
@@ -12,15 +14,18 @@ interface Props {
 const IssueDeleteBtn = ({ issueId }: Props) => {
   const router = useRouter();
   const [error, setError] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   async function deleteIssue() {
     setError(false);
+    setIsDeleting(true);
     try {
-      await axios.delete(`/api/issues/7${issueId}`);
+      await axios.delete(`/api/issues/${issueId}`);
       router.push("/issues");
       router.refresh();
     } catch (error) {
       setError(true);
+      setIsDeleting(false);
     }
   }
 
@@ -28,7 +33,11 @@ const IssueDeleteBtn = ({ issueId }: Props) => {
     <>
       <AlertDialog.Root>
         <AlertDialog.Trigger>
-          <Button color="red">Delete</Button>
+          <Button color="red" disabled={isDeleting}>
+            <GoTrash />
+            Delete
+            {isDeleting && <Spinner />}
+          </Button>
         </AlertDialog.Trigger>
         <AlertDialog.Content style={{ maxWidth: 500 }}>
           <AlertDialog.Title>Confirm Deletion</AlertDialog.Title>
