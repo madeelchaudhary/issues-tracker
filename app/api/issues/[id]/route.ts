@@ -57,3 +57,39 @@ export const PATCH = async (req: NextRequest, { params: { id } }: Props) => {
     );
   }
 };
+
+export const DELETE = async (_: NextRequest, { params: { id } }: Props) => {
+  try {
+    const issue = await prisma.issue.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!issue) {
+      return NextResponse.json(
+        {
+          error: "Issue not found",
+        },
+        { status: 404 }
+      );
+    }
+
+    const deletedIssue = await prisma.issue.delete({
+      where: {
+        id: issue.id,
+      },
+    });
+
+    return NextResponse.json(deletedIssue, {
+      status: 200,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error: "An unexpected error occurred",
+      },
+      { status: 500 }
+    );
+  }
+};
