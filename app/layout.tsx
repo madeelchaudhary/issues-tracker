@@ -8,6 +8,7 @@ import "@radix-ui/themes/styles.css";
 import "./theme-config.css";
 import "./globals.css";
 import "react-loading-skeleton/dist/skeleton.css";
+import AuthProvider from "./AuthProvider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -24,10 +25,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.variable}>
-        <Theme accentColor="violet">
-          <Navbar />
-          <Container>{children}</Container>
-        </Theme>
+        <AuthProvider>
+          <Theme accentColor="violet">
+            <Navbar />
+            <Container>{children}</Container>
+          </Theme>
+        </AuthProvider>
       </body>
     </html>
   );
