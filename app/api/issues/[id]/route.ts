@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import issueSchema from "@/validations/issue";
+import { issueUpdateSchema } from "@/validations/issue";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../auth/[...nextauth]/route";
@@ -18,7 +18,7 @@ export const PATCH = async (req: NextRequest, { params: { id } }: Props) => {
 
   try {
     const body = await req.json();
-    const validation = issueSchema.safeParse(body);
+    const validation = issueUpdateSchema.safeParse(body);
 
     if (!validation.success) {
       return NextResponse.json(
@@ -29,7 +29,34 @@ export const PATCH = async (req: NextRequest, { params: { id } }: Props) => {
       );
     }
 
-    const data = validation.data;
+    const { title, description, assigneeId } = validation.data;
+
+    if (!title && !description && assigneeId === undefined) {
+      return NextResponse.json(
+        {
+          error: "No fields to update",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (assigneeId) {
+      const assignee = await prisma.user.findUnique({
+        where: {
+          id: assigneeId,
+        },
+      });
+
+      if (!assignee) {
+        return NextResponse.json(
+          {
+            error: "Assignee not found",
+          },
+          { status: 404 }
+        );
+      }
+    }
+
     const issue = await prisma.issue.findUnique({
       where: {
         id,
@@ -49,7 +76,11 @@ export const PATCH = async (req: NextRequest, { params: { id } }: Props) => {
       where: {
         id,
       },
-      data,
+      data: {
+        title,
+        description,
+        assigneeId,
+      },
     });
 
     return NextResponse.json(updatedIssue, {
