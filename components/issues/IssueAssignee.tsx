@@ -1,9 +1,11 @@
 "use client";
 import { Issue, User } from "@prisma/client";
 import { Select } from "@radix-ui/themes";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import Skeleton from "react-loading-skeleton";
+
+import { toast } from "react-hot-toast";
 
 const IssueAssignee = ({ issue }: { issue: Issue }) => {
   const {
@@ -23,11 +25,15 @@ const IssueAssignee = ({ issue }: { issue: Issue }) => {
 
   if (error) return <Select.Root>Error</Select.Root>;
 
-  function handleChange(value: string) {
+  async function handleChange(value: string) {
     const assigneeId = value === "0" || !value ? null : value;
-    axios.patch(`/api/issues/${issue.id}`, {
-      assigneeId,
-    });
+    try {
+      await axios.patch(`/xapi/issues/${issue.id}`, {
+        assigneeId,
+      });
+    } catch (e) {
+      toast.error("Failed to update assignee");
+    }
   }
 
   return (

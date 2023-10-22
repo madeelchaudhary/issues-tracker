@@ -10,6 +10,7 @@ import "./globals.css";
 import "react-loading-skeleton/dist/skeleton.css";
 import AuthProvider from "./AuthProvider";
 import QueryClientProvider from "./QueryClientProvider";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -33,6 +34,7 @@ export default function RootLayout({
               <Container>{children}</Container>
             </Theme>
           </QueryClientProvider>
+          <Toaster toastOptions={{ duration: 2000 }} />
         </AuthProvider>
       </body>
     </html>
