@@ -4,13 +4,28 @@ import { Table, Text } from "@radix-ui/themes";
 import IssueStatusBadge from "@/components/ui/IssueStatusBadge";
 import RadixLink from "@/components/ui/RadixLink";
 import IssuesContainer from "./IssuesContainer";
-import { IssueStatus } from "@prisma/client";
+import { Issue, IssueStatus } from "@prisma/client";
+import Link from "next/link";
+import { GoArrowUp } from "react-icons/go";
 
 interface Props {
   searchParams: {
     status: IssueStatus;
+    orderBy: keyof Issue;
   };
 }
+
+interface Header {
+  label: string;
+  key: keyof Issue;
+  className?: string;
+}
+
+const headers: Header[] = [
+  { label: "Issue", key: "title" },
+  { label: "Status", key: "status", className: "hidden md:table-cell" },
+  { label: "Created", key: "created_at", className: "hidden md:table-cell" },
+];
 
 const IssuesPage = async ({ searchParams }: Props) => {
   const { status } = searchParams;
@@ -33,13 +48,21 @@ const IssuesPage = async ({ searchParams }: Props) => {
       <Table.Root variant="surface">
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeaderCell>Issue</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="hidden md:table-cell">
-              Status
-            </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="hidden md:table-cell">
-              Created
-            </Table.ColumnHeaderCell>
+            {headers.map((header) => (
+              <Table.ColumnHeaderCell
+                key={header.key}
+                className={header.className}
+              >
+                <Link
+                  href={{ query: { ...searchParams, orderBy: header.key } }}
+                >
+                  {header.key === searchParams.orderBy && (
+                    <GoArrowUp className="inline-block mr-1" />
+                  )}
+                  {header.label}
+                </Link>
+              </Table.ColumnHeaderCell>
+            ))}
           </Table.Row>
         </Table.Header>
         <Table.Body>
