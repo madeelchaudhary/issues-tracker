@@ -1,11 +1,21 @@
 import prisma from "@/prisma/client";
 import { Table, Text } from "@radix-ui/themes";
 
-import IssuesContainer from "./IssuesContainer";
 import IssueStatusBadge from "@/components/ui/IssueStatusBadge";
 import RadixLink from "@/components/ui/RadixLink";
+import IssuesContainer from "./IssuesContainer";
+import { IssueStatus } from "@prisma/client";
 
-const IssuesPage = async () => {
+interface Props {
+  searchParams: {
+    status: IssueStatus;
+  };
+}
+
+const IssuesPage = async ({ searchParams }: Props) => {
+  const { status } = searchParams;
+  const currentStatus = status && status in IssueStatus ? status : undefined;
+
   const issues = await prisma.issue.findMany({
     select: {
       title: true,
@@ -13,10 +23,13 @@ const IssuesPage = async () => {
       created_at: true,
       id: true,
     },
+    where: {
+      status: currentStatus,
+    },
   });
   await new Promise((resolve) => setTimeout(resolve, 1000));
   return (
-    <IssuesContainer>
+    <IssuesContainer status={currentStatus}>
       <Table.Root variant="surface">
         <Table.Header>
           <Table.Row>
