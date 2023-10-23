@@ -28,8 +28,13 @@ const headers: Header[] = [
 ];
 
 const IssuesPage = async ({ searchParams }: Props) => {
-  const { status } = searchParams;
+  const { status, orderBy } = searchParams;
   const currentStatus = status && status in IssueStatus ? status : undefined;
+  const orderByColumns = headers.map((header) => header.key);
+  const currentOrderBy =
+    orderBy && orderByColumns.includes(orderBy)
+      ? { [orderBy]: "asc" }
+      : undefined;
 
   const issues = await prisma.issue.findMany({
     select: {
@@ -41,6 +46,7 @@ const IssuesPage = async ({ searchParams }: Props) => {
     where: {
       status: currentStatus,
     },
+    orderBy: currentOrderBy,
   });
   await new Promise((resolve) => setTimeout(resolve, 1000));
   return (
