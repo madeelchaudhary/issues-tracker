@@ -29,16 +29,32 @@ const Pagination = ({ total, currentPage, perPage }: Props) => {
       <Text size="2">
         Page {currentPage} of {pages}
       </Text>
-      <Button variant="soft" disabled={currentPage === 1}>
+      <Button
+        variant="soft"
+        disabled={currentPage === 1}
+        onClick={() => handlePageChange(1)}
+      >
         <RxDoubleArrowLeft />
       </Button>
-      <Button variant="soft" disabled={currentPage === 1}>
+      <Button
+        variant="soft"
+        disabled={currentPage === 1}
+        onClick={() => handlePageChange(currentPage - 1)}
+      >
         <GoChevronLeft />
       </Button>
-      <Button variant="soft" disabled={currentPage === pages}>
+      <Button
+        variant="soft"
+        disabled={currentPage === pages}
+        onClick={() => handlePageChange(currentPage + 1)}
+      >
         <GoChevronRight />
       </Button>
-      <Button variant="soft" disabled={currentPage === pages}>
+      <Button
+        variant="soft"
+        disabled={currentPage === pages}
+        onClick={() => handlePageChange(pages)}
+      >
         <RxDoubleArrowRight />
       </Button>
     </Flex>

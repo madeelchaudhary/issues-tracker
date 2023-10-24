@@ -7,11 +7,13 @@ import IssuesContainer from "./IssuesContainer";
 import { Issue, IssueStatus } from "@prisma/client";
 import Link from "next/link";
 import { GoArrowUp } from "react-icons/go";
+import Pagination from "@/components/ui/Pagination";
 
 interface Props {
   searchParams: {
     status: IssueStatus;
     orderBy: keyof Issue;
+    page: string;
   };
 }
 
@@ -27,6 +29,8 @@ const headers: Header[] = [
   { label: "Created", key: "created_at", className: "hidden md:table-cell" },
 ];
 
+const PAGE_SIZE = 10;
+
 const IssuesPage = async ({ searchParams }: Props) => {
   const { status, orderBy } = searchParams;
   const currentStatus = status && status in IssueStatus ? status : undefined;
@@ -35,6 +39,7 @@ const IssuesPage = async ({ searchParams }: Props) => {
     orderBy && orderByColumns.includes(orderBy)
       ? { [orderBy]: "asc" }
       : undefined;
+  const page = parseInt(searchParams.page) || 1;
 
   const issues = await prisma.issue.findMany({
     select: {
@@ -47,8 +52,16 @@ const IssuesPage = async ({ searchParams }: Props) => {
       status: currentStatus,
     },
     orderBy: currentOrderBy,
+    skip: (page - 1) * PAGE_SIZE,
+    take: PAGE_SIZE,
   });
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  const count = await prisma.issue.count({
+    where: {
+      status: currentStatus,
+    },
+  });
+
   return (
     <IssuesContainer>
       <Table.Root variant="surface">
@@ -92,6 +105,7 @@ const IssuesPage = async ({ searchParams }: Props) => {
           ))}
         </Table.Body>
       </Table.Root>
+      <Pagination total={count} currentPage={page} perPage={PAGE_SIZE} />
     </IssuesContainer>
   );
 };
