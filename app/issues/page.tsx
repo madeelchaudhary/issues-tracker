@@ -50,7 +50,7 @@ const IssuesPage = async ({ searchParams }: Props) => {
   });
   await new Promise((resolve) => setTimeout(resolve, 1000));
   return (
-    <IssuesContainer status={currentStatus}>
+    <IssuesContainer>
       <Table.Root variant="surface">
         <Table.Header>
           <Table.Row>
