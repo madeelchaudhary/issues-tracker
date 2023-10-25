@@ -28,7 +28,7 @@ const IssueAssignee = ({ issue }: { issue: Issue }) => {
   async function handleChange(value: string) {
     const assigneeId = value === "0" || !value ? null : value;
     try {
-      await axios.patch(`/xapi/issues/${issue.id}`, {
+      await axios.patch(`/api/issues/${issue.id}`, {
         assigneeId,
       });
     } catch (e) {

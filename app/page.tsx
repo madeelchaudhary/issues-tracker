@@ -1,9 +1,9 @@
-import { Button } from "@radix-ui/themes";
+import LatestIssues from "./_components/LatestIssues";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <main className="flex h-full flex-col items-center justify-between p-24">
-      <Button>Button</Button>
+    <main className="p-5">
+      <LatestIssues />
     </main>
   );
 }
